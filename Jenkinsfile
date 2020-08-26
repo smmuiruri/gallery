@@ -55,6 +55,13 @@ pipeline {
         sh 'nodejs test'
       }
     }
+    stage('Deploy to Heroku') {
+      steps {
+        withCredentials([usernameColonPassword(credentialsId: 'heroku', variable: 'HEROKU_CREDENTIALS' )]){
+          sh 'git push https://${HEROKU_CREDENTIALS}@git.heroku.com/dry-retreat-51059.git master'
+        }
+      }
+    }
     stage('Publish Results'){
       if('SUCCESS' != currentBuild.getPreviousBuild().getResult()) {
         slackSend channel: '#qa-alerts', color: 'good', message: "Build Successful :green-circle: \n `${env.JOB_NAME} - #${env.BUILD_NUMBER} Back to normal (<${env.BUILD_URL}|Open in Jenkins>)"
