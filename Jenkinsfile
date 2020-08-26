@@ -32,8 +32,7 @@ pipeline {
     nodejs "Node-Build"
   }
   stages { 
-    try {
-    stage('Checkout code') {
+      stage('Checkout code') {
       steps {
           checkout scm
           sh 'git log HEAD^ ..HEAD --pretty = "%h changes by %an , %ar - %s" > GIT_CHANGES'
@@ -69,13 +68,12 @@ pipeline {
       }
     }
   }
-  catch (err) {
-      if('FAILURE' != currentBuild.getPreviousBuild().getResult()) {
-          slackSend channel: '#qa-alerts', color: 'danger', message: "Build Fail :red-circle: \n `${env.JOB_NAME} - #${env.BUILD_NUMBER} Failure (<${env.BUILD_URL}|Open in Jenkins>)"
-      }
-      throw err
-  }
-  }
+  // catch (err) {
+  //     if('FAILURE' != currentBuild.getPreviousBuild().getResult()) {
+  //         slackSend channel: '#qa-alerts', color: 'danger', message: "Build Fail :red-circle: \n `${env.JOB_NAME} - #${env.BUILD_NUMBER} Failure (<${env.BUILD_URL}|Open in Jenkins>)"
+  //     }
+  //     throw err
+  // }
    post {
         success {
             emailext attachLog: true, 
