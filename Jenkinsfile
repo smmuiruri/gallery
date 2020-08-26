@@ -31,7 +31,7 @@ pipeline {
   tools { 
     nodejs "Node-Build"
   }
-  Node { 
+  stages { 
     try {
     stage('Checkout code') {
       steps {
