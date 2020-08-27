@@ -32,14 +32,14 @@ pipeline {
     nodejs "Node-Build"
   }
   stages { 
-      stage('Checkout code') {
-      steps {
-          checkout scm
-          sh 'git log HEAD^ ..HEAD --pretty = "%h changes by %an , %ar - %s" > GIT_CHANGES'
-          def lastchanges = readFile('GIT_CHANGES')
-          slackSend color: "#warning", message: "Build Started :grey-circle: ${env.JOB_NAME} ${env.BUILD_NUMBER}"
-      }
-    }
+    //   stage('Checkout code') {
+    //   steps {
+    //       checkout scm
+    //       sh 'git log HEAD^ ..HEAD --pretty = "%h changes by %an , %ar - %s" > GIT_CHANGES'
+    //       def lastchanges = readFile('GIT_CHANGES')
+    //       slackSend color: "#warning", message: "Build Started :grey-circle: ${env.JOB_NAME} ${env.BUILD_NUMBER}"
+    //   }
+    // }
     stage('clone repository') {
       steps { 
         git 'https://github.com/smmuiruri/gallery'
