@@ -45,14 +45,14 @@ pipeline {
         git 'https://github.com/smmuiruri/gallery'
       }
     }
-    stage('Build the project') {
+    stage('Build') {
       steps { 
-        sh 'nodejs build'
+        sh 'npm install'
       }
     }
     stage('Tests') {
       steps { 
-        sh 'nodejs test'
+        sh 'npm test'
       }
     }
     stage('Deploy to Heroku') {
@@ -68,12 +68,12 @@ pipeline {
       }
     }
   }
-  // catch (err) {
-  //     if('FAILURE' != currentBuild.getPreviousBuild().getResult()) {
-  //         slackSend channel: '#qa-alerts', color: 'danger', message: "Build Fail :red-circle: \n `${env.JOB_NAME} - #${env.BUILD_NUMBER} Failure (<${env.BUILD_URL}|Open in Jenkins>)"
-  //     }
-  //     throw err
-  // }
+  catch (err) {
+      if('FAILURE' != currentBuild.getPreviousBuild().getResult()) {
+          slackSend channel: '#qa-alerts', color: 'danger', message: "Build Fail :red-circle: \n `${env.JOB_NAME} - #${env.BUILD_NUMBER} Failure (<${env.BUILD_URL}|Open in Jenkins>)"
+      }
+      throw err
+  }
    post {
         success {
             emailext attachLog: true, 
