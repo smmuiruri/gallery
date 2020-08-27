@@ -45,11 +45,11 @@ pipeline {
         git 'https://github.com/smmuiruri/gallery'
       }
     }
-  //   stage('Build') {
-  //     steps { 
-  //       sh 'npm install'
-  //     }
-  //   }
+    stage('Build') {
+      steps { 
+        sh 'npm install'
+      }
+    }
   //   stage('Tests') {
   //     steps { 
   //       sh 'npm test'
