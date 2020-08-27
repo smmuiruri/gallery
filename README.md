@@ -17,3 +17,4 @@
 - downloads
 - gitter chat
 - license
+By: Samwel
