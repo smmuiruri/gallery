@@ -45,52 +45,52 @@ pipeline {
         git 'https://github.com/smmuiruri/gallery'
       }
     }
-    stage('Build') {
-      steps { 
-        sh 'npm install'
-      }
-    }
-    stage('Tests') {
-      steps { 
-        sh 'npm test'
-      }
-    }
-    stage('Deploy to Heroku') {
-      steps {
-        withCredentials([usernameColonPassword(credentialsId: 'heroku', variable: 'HEROKU_CREDENTIALS' )]){
-          sh 'git push https://${HEROKU_CREDENTIALS}@git.heroku.com/dry-retreat-51059.git master'
-        }
-      }
-    }
-    stage('Publish Results'){
-      if('SUCCESS' != currentBuild.getPreviousBuild().getResult()) {
-        slackSend channel: '#qa-alerts', color: 'good', message: "Build Successful :green-circle: \n `${env.JOB_NAME} - #${env.BUILD_NUMBER} Back to normal (<${env.BUILD_URL}|Open in Jenkins>)"
-      }
-    }
-  }
-  catch (err) {
-      if('FAILURE' != currentBuild.getPreviousBuild().getResult()) {
-          slackSend channel: '#qa-alerts', color: 'danger', message: "Build Fail :red-circle: \n `${env.JOB_NAME} - #${env.BUILD_NUMBER} Failure (<${env.BUILD_URL}|Open in Jenkins>)"
-      }
-      throw err
-  }
-   post {
-        success {
-            emailext attachLog: true, 
-                body: EMAIL_BODY, 
+  //   stage('Build') {
+  //     steps { 
+  //       sh 'npm install'
+  //     }
+  //   }
+  //   stage('Tests') {
+  //     steps { 
+  //       sh 'npm test'
+  //     }
+  //   }
+  //   stage('Deploy to Heroku') {
+  //     steps {
+  //       withCredentials([usernameColonPassword(credentialsId: 'heroku', variable: 'HEROKU_CREDENTIALS' )]){
+  //         sh 'git push https://${HEROKU_CREDENTIALS}@git.heroku.com/dry-retreat-51059.git master'
+  //       }
+  //     }
+  //   }
+  //   stage('Publish Results'){
+  //     if('SUCCESS' != currentBuild.getPreviousBuild().getResult()) {
+  //       slackSend channel: '#qa-alerts', color: 'good', message: "Build Successful :green-circle: \n `${env.JOB_NAME} - #${env.BUILD_NUMBER} Back to normal (<${env.BUILD_URL}|Open in Jenkins>)"
+  //     }
+  //   }
+  // }
+  // catch (err) {
+  //     if('FAILURE' != currentBuild.getPreviousBuild().getResult()) {
+  //         slackSend channel: '#qa-alerts', color: 'danger', message: "Build Fail :red-circle: \n `${env.JOB_NAME} - #${env.BUILD_NUMBER} Failure (<${env.BUILD_URL}|Open in Jenkins>)"
+  //     }
+  //     throw err
+  // }
+  //  post {
+  //       success {
+  //           emailext attachLog: true, 
+  //               body: EMAIL_BODY, 
 
-                subject: EMAIL_SUBJECT_SUCCESS,
+  //               subject: EMAIL_SUBJECT_SUCCESS,
 
-                to: EMAIL_RECEPIENT
-        }
+  //               to: EMAIL_RECEPIENT
+  //       }
 
-        failure {
-            emailext attachLog: true, 
-                body: EMAIL_BODY, 
+  //       failure {
+  //           emailext attachLog: true, 
+  //               body: EMAIL_BODY, 
 
-                subject: EMAIL_SUBJECT_FAILURE, 
+  //               subject: EMAIL_SUBJECT_FAILURE, 
 
-                to: EMAIL_RECEPIENT
-        }
-    }
+  //               to: EMAIL_RECEPIENT
+  //       }
+  //   }
 }
