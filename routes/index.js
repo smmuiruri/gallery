@@ -27,13 +27,13 @@ router.post('/upload', (req, res)=>{
             if (req.file == undefined){
                 res.redirect('/?msg=Error: No file selcted!');
             }else{
-                // const imageObj = {
-                //     id: uuid.v4(),
-                //     name: req.file.filename,
-                //     path: 'images/' + req.file.filename
-                // }
-                // db.push(imageObj);
-                // console.log(db);
+                const imageObj = {
+                    id: uuid.v4(),
+                    name: req.file.filename,
+                    path: 'images/' + req.file.filename
+                }
+                db.push(imageObj);
+                console.log(db);
 
                 // create new image
                 let newImage = new Image({
