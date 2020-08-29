@@ -6,13 +6,7 @@ def getBuildUser() {
     return currentBuild.rawBuild.getCause(Cause.UserIdCause).getUserId()
 }
 pipeline { 
-   // Set up local variables for your pipeline
-    environment {
-        // test variable: 0=success, 1=fail; must be string
-        doError = '0'
-        BUILD_USER = ''
-    }
-  agent any
+    agent any
       environment {
 
         EMAIL_BODY = 
@@ -38,6 +32,11 @@ pipeline {
         EMAIL_SUBJECT_FAILURE = "Status: 'FAILURE' -Job \'${env.JOB_NAME}:${env.BUILD_NUMBER}\'" 
 
         EMAIL_RECEPIENT = 'smmuiruri@gmail.com'
+
+        // test variable: 0=success, 1=fail; must be string
+        doError = '0'
+        BUILD_USER = ''
+    }
 
     }
 
@@ -107,7 +106,7 @@ pipeline {
                 color: COLOR_MAP[currentBuild.currentResult],
                 message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} by ${BUILD_USER}\n More info at: ${env.BUILD_URL}"
         }
-    }
+    
   //   stage('Publish Results'){
   //     if('SUCCESS' != currentBuild.getPreviousBuild().getResult()) {
   //       slackSend channel: '#qa-alerts', color: 'good', message: "Build Successful :green-circle: \n `${env.JOB_NAME} - #${env.BUILD_NUMBER} Back to normal (<${env.BUILD_URL}|Open in Jenkins>)"
@@ -120,7 +119,7 @@ pipeline {
   //     }
   //     throw err
   // }
-   post {
+
         success {
             emailext attachLog: true, 
                 body: EMAIL_BODY, 
