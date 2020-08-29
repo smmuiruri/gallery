@@ -1,32 +1,32 @@
 pipeline { 
   agent any
-    //   environment {
+      environment {
 
-    //     EMAIL_BODY = 
+        EMAIL_BODY = 
 
-    //     """
+        """
 
-    //         <p>EXECUTED: Job <b>\'${env.JOB_NAME}:${env.BUILD_NUMBER})\'</b></p>
+            <p>EXECUTED: Job <b>\'${env.JOB_NAME}:${env.BUILD_NUMBER})\'</b></p>
 
-    //         <p>
+            <p>
 
-    //         View console output at 
+            View console output at 
 
-    //         "<a href="${env.BUILD_URL}">${env.JOB_NAME}:${env.BUILD_NUMBER}</a>"
+            "<a href="${env.BUILD_URL}">${env.JOB_NAME}:${env.BUILD_NUMBER}</a>"
 
-    //         </p> 
+            </p> 
 
-    //         <p><i>(Build log is attached.)</i></p>
+            <p><i>(Build log is attached.)</i></p>
 
-    //     """
+        """
 
-    //     EMAIL_SUBJECT_SUCCESS = "Status: 'SUCCESS' -Job \'${env.JOB_NAME}:${env.BUILD_NUMBER}\'" 
+        EMAIL_SUBJECT_SUCCESS = "Status: 'SUCCESS' -Job \'${env.JOB_NAME}:${env.BUILD_NUMBER}\'" 
 
-    //     EMAIL_SUBJECT_FAILURE = "Status: 'FAILURE' -Job \'${env.JOB_NAME}:${env.BUILD_NUMBER}\'" 
+        EMAIL_SUBJECT_FAILURE = "Status: 'FAILURE' -Job \'${env.JOB_NAME}:${env.BUILD_NUMBER}\'" 
 
-    //     EMAIL_RECEPIENT = 'smmuiruri@gmail.com'
+        EMAIL_RECEPIENT = 'smmuiruri@gmail.com'
 
-    // }
+    }
 
   tools { 
     nodejs "Node-Build"
@@ -50,11 +50,11 @@ pipeline {
         sh 'npm install'
       }
     }
-    // stage('Tests') {
-    //   steps { 
-    //     sh 'npm test'
-    //   }
-    // }
+    stage('Tests') {
+      steps { 
+        sh 'npm test'
+      }
+    }
     stage('Deploy to Heroku') {
       steps {
         withCredentials([usernameColonPassword(credentialsId: 'heroku', variable: 'HEROKU_CREDENTIALS' )]){
@@ -74,24 +74,24 @@ pipeline {
   //     }
   //     throw err
   // }
-  //  post {
-  //       success {
-  //           emailext attachLog: true, 
-  //               body: EMAIL_BODY, 
+   post {
+        success {
+            emailext attachLog: true, 
+                body: EMAIL_BODY, 
 
-  //               subject: EMAIL_SUBJECT_SUCCESS,
+                subject: EMAIL_SUBJECT_SUCCESS,
 
-  //               to: EMAIL_RECEPIENT
-  //       }
+                to: EMAIL_RECEPIENT
+        }
 
-  //       failure {
-  //           emailext attachLog: true, 
-  //               body: EMAIL_BODY, 
+        failure {
+            emailext attachLog: true, 
+                body: EMAIL_BODY, 
 
-  //               subject: EMAIL_SUBJECT_FAILURE, 
+                subject: EMAIL_SUBJECT_FAILURE, 
 
-  //               to: EMAIL_RECEPIENT
-  //       }
-  //   }
+                to: EMAIL_RECEPIENT
+        }
+    }
 }
 }
