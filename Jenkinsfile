@@ -84,16 +84,16 @@ pipeline {
                 error "Test failed on purpose, doError == str(1)"
             }
         }
-        stage('Success') {
-            // when doError is equal to 0, just print a simple message
-            when {
-                expression { doError == '0' }
-            }
-            steps {
-                echo "Success :)"
-            }
+    stage('Success') {
+        // when doError is equal to 0, just print a simple message
+        when {
+            expression { doError == '0' }
+        }
+        steps {
+            echo "Success :)"
         }
     }
+}
 
     // Post-build actions
     post {
@@ -102,7 +102,7 @@ pipeline {
                 BUILD_USER = getBuildUser()
             }
             echo 'I will always say hello in the console.'
-            slackSend channel: '#slack-test-channel',
+            slackSend channel: '#sammymosh',
                 color: COLOR_MAP[currentBuild.currentResult],
                 message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} by ${BUILD_USER}\n More info at: ${env.BUILD_URL}"
         }
