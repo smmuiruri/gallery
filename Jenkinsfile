@@ -62,6 +62,7 @@ pipeline {
         }
       }
     }
+  }
   //   stage('Publish Results'){
   //     if('SUCCESS' != currentBuild.getPreviousBuild().getResult()) {
   //       slackSend channel: '#qa-alerts', color: 'good', message: "Build Successful :green-circle: \n `${env.JOB_NAME} - #${env.BUILD_NUMBER} Back to normal (<${env.BUILD_URL}|Open in Jenkins>)"
@@ -93,5 +94,4 @@ pipeline {
                 to: EMAIL_RECEPIENT
         }
     }
-}
 }
