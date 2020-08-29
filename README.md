@@ -17,4 +17,4 @@
 - downloads
 - gitter chat
 - license
-By: Samwel Mwaura
+By: Samwel Mwaura Muiruri
