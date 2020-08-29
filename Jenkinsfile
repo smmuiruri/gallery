@@ -38,7 +38,7 @@ pipeline {
         BUILD_USER = ''
     }
 
-    }
+  
 
   tools { 
     nodejs "Node-Build"
