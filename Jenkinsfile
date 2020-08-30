@@ -27,6 +27,8 @@ pipeline {
 
         """
 
+        EMAIL_SUBJECT_START = "STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
+
         EMAIL_SUBJECT_SUCCESS = "Status: 'SUCCESS' -Job \'${env.JOB_NAME}:${env.BUILD_NUMBER}\'" 
 
         EMAIL_SUBJECT_FAILURE = "Status: 'FAILURE' -Job \'${env.JOB_NAME}:${env.BUILD_NUMBER}\'" 
@@ -59,10 +61,11 @@ pipeline {
       
           // send to email
         emailext (
-            subject: "STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-            body: """<p>STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
-              <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>""",
-            to: EMAIL_RECEPIENT
+          body: EMAIL_BODY, 
+
+          subject: EMAIL_SUBJECT_START,
+
+          to: EMAIL_RECEPIENT
           )
       }
     }
