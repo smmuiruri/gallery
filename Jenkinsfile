@@ -52,6 +52,12 @@ pipeline {
     //       slackSend color: "#warning", message: "Build Started :grey-circle: ${env.JOB_NAME} ${env.BUILD_NUMBER}"
     //   }
     // }
+    stage ('Start') {
+      steps {
+        // send build started notifications
+        slackSend (color: '#FFFF00', message: "STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+      }
+    }
     stage('clone repository') {
       steps { 
         git 'https://github.com/smmuiruri/gallery'
@@ -103,18 +109,18 @@ pipeline {
 //                 message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} by ${BUILD_USER}\n More info at: ${env.BUILD_URL}"
 //         }
     
-    stage('Publish Results'){
-      if('SUCCESS' === currentBuild.getPreviousBuild().getResult()) {
-        slackSend channel: '#qa-alerts', color: 'good', message: "Build Successful :green-circle: \n `${env.JOB_NAME} - #${env.BUILD_NUMBER} Back to normal (<${env.BUILD_URL}|Open in Jenkins>)"
-      }
-    }
+  //   stage('Publish Results'){
+  //     if('SUCCESS' === currentBuild.getPreviousBuild().getResult()) {
+  //       slackSend channel: '#qa-alerts', color: 'good', message: "Build Successful :green-circle: \n `${env.JOB_NAME} - #${env.BUILD_NUMBER} Back to normal (<${env.BUILD_URL}|Open in Jenkins>)"
+  //     }
+  //   }
   
-  stage (err) {
-      if('FAILURE' != currentBuild.getPreviousBuild().getResult()) {
-          slackSend channel: '#qa-alerts', color: 'danger', message: "Build Fail :red-circle: \n `${env.JOB_NAME} - #${env.BUILD_NUMBER} Failure (<${env.BUILD_URL}|Open in Jenkins>)"
-      }
-      throw err
-  }
+  // stage (err) {
+  //     if('FAILURE' != currentBuild.getPreviousBuild().getResult()) {
+  //         slackSend channel: '#qa-alerts', color: 'danger', message: "Build Fail :red-circle: \n `${env.JOB_NAME} - #${env.BUILD_NUMBER} Failure (<${env.BUILD_URL}|Open in Jenkins>)"
+  //     }
+  //     throw err
+  // }
 }
   success {
       emailext attachLog: true, 
