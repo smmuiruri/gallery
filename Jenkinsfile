@@ -73,8 +73,8 @@ pipeline {
 }
 post {
   success {
-//send build success to slack
-      slackSend (color: '#00FF00', message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+// //send build success to slack
+//       slackSend (color: '#00FF00', message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
 //send build success to email    
       emailext attachLog: true, 
           body: EMAIL_BODY, 
@@ -85,8 +85,8 @@ post {
   }
 
   failure {
-//send build failure to slack
-      slackSend (color: '#FF0000', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+// //send build failure to slack
+//       slackSend (color: '#FF0000', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
 //send build failure to email
       emailext attachLog: true, 
           body: EMAIL_BODY, 
@@ -96,4 +96,30 @@ post {
           to: EMAIL_RECEPIENT
   }
 }
+}
+node {
+ try {
+ stage 'Checkout'
+ checkout scm
+ 
+ sh 'git log HEAD^..HEAD --pretty="%h %an - %s" > GIT_CHANGES'
+ def lastChanges = readFile('GIT_CHANGES')
+ slackSend color: "warning", message: "Started `${env.JOB_NAME}#${env.BUILD_NUMBER}`\n\n_The changes:_\n${lastChanges}"
+ 
+ stage 'Clone repository'
+ echo 'Repository exists'
+ stage 'Test'
+ echo 'testing'
+ stage 'Deploy'
+ echo "Testing deploy."
+ 
+ stage 'Publish results'
+ slackSend color: "good", message: "Build successful :meow_party: \n `${env.JOB_NAME}#${env.BUILD_NUMBER}` <${env.BUILD_URL}|Open in Jenkins> \n successfully deployed Live site \n https://dry-retreat-51059.herokuapp.com/"
+ }
+ 
+ catch (err) {
+ slackSend color: "danger", message: "Build failed :angry: \n`${env.JOB_NAME}#${env.BUILD_NUMBER}` <${env.BUILD_URL}|Open in Jenkins>"
+ 
+ throw err
+ }
 }
