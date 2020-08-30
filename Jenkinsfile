@@ -1,10 +1,8 @@
-def COLOR_MAP = [
-    'SUCCESS': 'good', 
-    'FAILURE': 'danger',
-]
-// def getBuildUser() {
-//     return currentBuild.rawBuild.getCause(Cause.UserIdCause).getUserId()
-// }
+// def COLOR_MAP = [
+//     'SUCCESS': 'good', 
+//     'FAILURE': 'danger',
+// ]
+
 pipeline { 
     agent any
       environment {
@@ -35,9 +33,6 @@ pipeline {
 
         EMAIL_RECEPIENT = 'smmuiruri@gmail.com'
 
-        // // test variable: 0=success, 1=fail; must be string
-        // doError = '0'
-        // BUILD_USER = ''
     }
 
   
@@ -46,14 +41,6 @@ pipeline {
     nodejs "Node-Build"
   }
   stages { 
-    //   stage('Checkout code') {
-    //   steps {
-    //       checkout scm
-    //       sh 'git log HEAD^ ..HEAD --pretty = "%h changes by %an , %ar - %s" > GIT_CHANGES'
-    //       def lastchanges = readFile('GIT_CHANGES')
-    //       slackSend color: "#warning", message: "Build Started :grey-circle: ${env.JOB_NAME} ${env.BUILD_NUMBER}"
-    //   }
-    // }
     stage ('Start') {
       steps {
         // send build started notifications
@@ -81,7 +68,7 @@ pipeline {
     }
     stage('Tests') {
       steps { 
-        sh 'np test'
+        sh 'npm test'
       }
     }
     stage('Deploy to Heroku') {
@@ -91,47 +78,6 @@ pipeline {
         }
       }
     }
-//     stage('Error') {
-//             steps {
-//                 echo "Failure :("
-//                 error "Test failed on purpose, doError == str(1)"
-//             }
-//         }
-//     stage('Success') {
-//         // when doError is equal to 0, just print a simple message
-//         when {
-//             expression { doError == '0' }
-//         }
-//         steps {
-//             echo "Success :)"
-//         }
-//     }
-// }
-
-//     // Post-build actions
-//     post {
-//         always {
-//             script {
-//                 BUILD_USER = getBuildUser()
-//             }
-//             echo 'I will always say hello in the console.'
-//             slackSend channel: '#sammymosh',
-//                 color: COLOR_MAP[currentBuild.currentResult],
-//                 message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} by ${BUILD_USER}\n More info at: ${env.BUILD_URL}"
-//         }
-    
-  //   stage('Publish Results'){
-  //     if('SUCCESS' === currentBuild.getPreviousBuild().getResult()) {
-  //       slackSend channel: '#qa-alerts', color: 'good', message: "Build Successful :green-circle: \n `${env.JOB_NAME} - #${env.BUILD_NUMBER} Back to normal (<${env.BUILD_URL}|Open in Jenkins>)"
-  //     }
-  //   }
-  
-  // stage (err) {
-  //     if('FAILURE' != currentBuild.getPreviousBuild().getResult()) {
-  //         slackSend channel: '#qa-alerts', color: 'danger', message: "Build Fail :red-circle: \n `${env.JOB_NAME} - #${env.BUILD_NUMBER} Failure (<${env.BUILD_URL}|Open in Jenkins>)"
-  //     }
-  //     throw err
-  // }
 }
 post {
   success {
