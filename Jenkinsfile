@@ -1,10 +1,10 @@
-def COLOR_MAP = [
-    'SUCCESS': 'good', 
-    'FAILURE': 'danger',
-]
-def getBuildUser() {
-    return currentBuild.rawBuild.getCause(Cause.UserIdCause).getUserId()
-}
+// def COLOR_MAP = [
+//     'SUCCESS': 'good', 
+//     'FAILURE': 'danger',
+// ]
+// def getBuildUser() {
+//     return currentBuild.rawBuild.getCause(Cause.UserIdCause).getUserId()
+// }
 pipeline { 
     agent any
       environment {
@@ -33,9 +33,9 @@ pipeline {
 
         EMAIL_RECEPIENT = 'smmuiruri@gmail.com'
 
-        // test variable: 0=success, 1=fail; must be string
-        doError = '0'
-        BUILD_USER = ''
+        // // test variable: 0=success, 1=fail; must be string
+        // doError = '0'
+        // BUILD_USER = ''
     }
 
   
@@ -74,68 +74,63 @@ pipeline {
         }
       }
     }
-    stage('Error') {
-            // when doError is equal to 1, return an error
-            when {
-                expression { doError == '1' }
-            }
-            steps {
-                echo "Failure :("
-                error "Test failed on purpose, doError == str(1)"
-            }
-        }
-    stage('Success') {
-        // when doError is equal to 0, just print a simple message
-        when {
-            expression { doError == '0' }
-        }
-        steps {
-            echo "Success :)"
-        }
-    }
-}
+//     stage('Error') {
+//             steps {
+//                 echo "Failure :("
+//                 error "Test failed on purpose, doError == str(1)"
+//             }
+//         }
+//     stage('Success') {
+//         // when doError is equal to 0, just print a simple message
+//         when {
+//             expression { doError == '0' }
+//         }
+//         steps {
+//             echo "Success :)"
+//         }
+//     }
+// }
 
-    // Post-build actions
-    post {
-        always {
-            script {
-                BUILD_USER = getBuildUser()
-            }
-            echo 'I will always say hello in the console.'
-            slackSend channel: '#sammymosh',
-                color: COLOR_MAP[currentBuild.currentResult],
-                message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} by ${BUILD_USER}\n More info at: ${env.BUILD_URL}"
-        }
+//     // Post-build actions
+//     post {
+//         always {
+//             script {
+//                 BUILD_USER = getBuildUser()
+//             }
+//             echo 'I will always say hello in the console.'
+//             slackSend channel: '#sammymosh',
+//                 color: COLOR_MAP[currentBuild.currentResult],
+//                 message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} by ${BUILD_USER}\n More info at: ${env.BUILD_URL}"
+//         }
     
-  //   stage('Publish Results'){
-  //     if('SUCCESS' != currentBuild.getPreviousBuild().getResult()) {
-  //       slackSend channel: '#qa-alerts', color: 'good', message: "Build Successful :green-circle: \n `${env.JOB_NAME} - #${env.BUILD_NUMBER} Back to normal (<${env.BUILD_URL}|Open in Jenkins>)"
-  //     }
-  //   }
-  // }
-  // catch (err) {
-  //     if('FAILURE' != currentBuild.getPreviousBuild().getResult()) {
-  //         slackSend channel: '#qa-alerts', color: 'danger', message: "Build Fail :red-circle: \n `${env.JOB_NAME} - #${env.BUILD_NUMBER} Failure (<${env.BUILD_URL}|Open in Jenkins>)"
-  //     }
-  //     throw err
-  // }
-
-        success {
-            emailext attachLog: true, 
-                body: EMAIL_BODY, 
-
-                subject: EMAIL_SUBJECT_SUCCESS,
-
-                to: EMAIL_RECEPIENT
-        }
-
-        failure {
-            emailext attachLog: true, 
-                body: EMAIL_BODY, 
-
-                subject: EMAIL_SUBJECT_FAILURE, 
-
-                to: EMAIL_RECEPIENT
-        }
+    stage('Publish Results'){
+      if('SUCCESS' === currentBuild.getPreviousBuild().getResult()) {
+        slackSend channel: '#qa-alerts', color: 'good', message: "Build Successful :green-circle: \n `${env.JOB_NAME} - #${env.BUILD_NUMBER} Back to normal (<${env.BUILD_URL}|Open in Jenkins>)"
+      }
     }
+  
+  stage (err) {
+      if('FAILURE' != currentBuild.getPreviousBuild().getResult()) {
+          slackSend channel: '#qa-alerts', color: 'danger', message: "Build Fail :red-circle: \n `${env.JOB_NAME} - #${env.BUILD_NUMBER} Failure (<${env.BUILD_URL}|Open in Jenkins>)"
+      }
+      throw err
+  }
+}
+  success {
+      emailext attachLog: true, 
+          body: EMAIL_BODY, 
+
+          subject: EMAIL_SUBJECT_SUCCESS,
+
+          to: EMAIL_RECEPIENT
+  }
+
+  failure {
+      emailext attachLog: true, 
+          body: EMAIL_BODY, 
+
+          subject: EMAIL_SUBJECT_FAILURE, 
+
+          to: EMAIL_RECEPIENT
+  }
 }
