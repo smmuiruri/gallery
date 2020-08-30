@@ -122,6 +122,7 @@ pipeline {
   //     throw err
   // }
 }
+post {
   success {
       emailext attachLog: true, 
           body: EMAIL_BODY, 
@@ -139,4 +140,5 @@ pipeline {
 
           to: EMAIL_RECEPIENT
   }
+}
 }
