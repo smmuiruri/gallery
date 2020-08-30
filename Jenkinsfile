@@ -1,8 +1,3 @@
-// def COLOR_MAP = [
-//     'SUCCESS': 'good', 
-//     'FAILURE': 'danger',
-// ]
-
 pipeline { 
     agent any
       environment {
@@ -34,9 +29,6 @@ pipeline {
         EMAIL_RECEPIENT = 'smmuiruri@gmail.com'
 
     }
-
-  
-
   tools { 
     nodejs "Node-Build"
   }
@@ -81,9 +73,9 @@ pipeline {
 }
 post {
   success {
-
+//send build success to slack
       slackSend (color: '#00FF00', message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-      
+//send build success to email    
       emailext attachLog: true, 
           body: EMAIL_BODY, 
 
@@ -93,9 +85,9 @@ post {
   }
 
   failure {
-
+//send build failure to slack
       slackSend (color: '#FF0000', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-
+//send build failure to email
       emailext attachLog: true, 
           body: EMAIL_BODY, 
 
